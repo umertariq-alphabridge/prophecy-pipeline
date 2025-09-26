@@ -193,4 +193,13 @@ sqlOrchestratorPipelines:
     - .prophecy/ide/pipelines/aggpipeline.json
     - pipelines/aggpipeline.py
     createdAt: '2025-09-25 20:45:46'
-sqlBusinessApps: {}
+sqlBusinessApps:
+  .prophecy/metadata/sqlbusinessapp/VisualizationApp:
+    name: VisualizationApp
+    schema: null
+    description: null
+    author: umer.tariq@alphabridgeconsulting.com
+    files:
+    - apps/VisualizationApp.json
+    createdAt: '2025-09-26 15:58:06'
+    sqlOrchestrationPipelineName: aggpipeline

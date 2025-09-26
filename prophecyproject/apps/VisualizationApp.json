@@ -1,0 +1,11 @@
+{
+  "id" : "VisualizationApp",
+  "metainfo" : {
+    "description" : "",
+    "pipelineId" : "aggpipeline"
+  },
+  "definition" : {
+    "template" : [ ]
+  },
+  "instances" : { }
+}
