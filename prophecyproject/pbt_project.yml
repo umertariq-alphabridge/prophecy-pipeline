@@ -188,8 +188,8 @@ sqlOrchestratorPipelines:
     description: null
     author: umer.tariq@alphabridgeconsulting.com
     files:
-    - models/aggpipeline/schema.yml
     - models/aggpipeline/aggpipeline__product_profit_summary_1.sql
+    - models/aggpipeline/schema.yml
     - .prophecy/ide/pipelines/aggpipeline.json
     - pipelines/aggpipeline.py
     createdAt: '2025-09-25 20:45:46'
