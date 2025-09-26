@@ -1,0 +1,6 @@
+---
+version: 2
+models:
+- name: "aggpipeline__product_profit_summary_1"
+  tags:
+  - "prophecy_temp"
