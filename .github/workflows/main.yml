@@ -41,22 +41,22 @@ jobs:
 
       # Validate the Prophecy SQL pipeline project
       - name: Run PBT validate
-        run: pbt validate --path .
+        run: pbt validate --path ./prophecyproject
 
-      # Build the SQL pipeline project
       - name: Run PBT build
-        run: pbt build --path .
+        run: pbt build --path ./prophecyproject
 
-      # Run pipeline tests (if you have defined them in tests/)
       - name: Run PBT test
-        run: pbt test --path .
+        run: pbt test --path ./prophecyproject
 
-      # Deploy pipeline to Databricks via PBT
       - name: Run PBT deploy
         run: |
           pbt deploy \
-            --path . \
+            --path ./prophecyproject \
             --release-version 1.0.${{ github.run_number }} \
             --workspace $DATABRICKS_HOST \
+            --token $DATABRICKS_TOKEN \
+            --fabric-id $FABRIC_ID
+
             --token $DATABRICKS_TOKEN \
             --fabric-id $FABRIC_ID
