@@ -1,39 +1,62 @@
-name: Example CI/CD with GitHub actions
+name: Deploy Prophecy SQL Pipeline
+
 on:
-push:
-branches: ["main"]
+  push:
+    branches: ["main"]   # Deploy when code is merged to main
+  workflow_dispatch:      # Allow manual trigger
 
 env:
-DATABRICKS_HOST: ${{ secrets.DATABRICKS_URL }}
-DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-# replace with your fabric id:
-FABRIC_ID: "33898"
+  DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  # Replace with your Prophecy Fabric ID if needed
+  FABRIC_ID: "33898"
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setup Java (required by Spark/Databricks for compilation)
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
-      - name: Set up Python 3.9.13
+
+      # Setup Python (used by PBT and Prophecy SQL pipelines)
+      - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9.13"
-      # Install all python dependencies
-      # prophecy-libs not included here because prophecy-build-tool takes care of it by reading each pipeline's setup.py
+          python-version: "3.9"
+
+      # Install dependencies including Prophecy Build Tool (pbt)
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install build pytest wheel pytest-html pyspark==3.3.0  prophecy-build-tool
+          pip3 install build pytest wheel pytest-html pyspark==3.3.0 prophecy-build-tool
+
+      # Validate the Prophecy SQL pipeline project
       - name: Run PBT validate
         run: pbt validate --path .
+
+      # Build the SQL pipeline project
       - name: Run PBT build
         run: pbt build --path .
+
+      # Run pipeline tests (if you have defined them in tests/)
       - name: Run PBT test
         run: pbt test --path .
+
+      # Deploy pipeline to Databricks via PBT
       - name: Run PBT deploy
-        run: pbt deploy --path . --release-version 1.0 --project-id example_project_id
+        run: |
+          pbt deploy \
+            --path . \
+            --release-version 1.0.${{ github.run_number }} \
+            --workspace $DATABRICKS_HOST \
+            --token $DATABRICKS_TOKEN \
+            --fabric-id $FABRIC_ID
